@@ -35,6 +35,14 @@ class EmpaticaManager {
           return _didUpdateStatus(call.arguments);
         case 'didDiscoverDevice':
           return _didDiscoverDevice(call.arguments);
+        case 'didReceiveGSR':
+          return _didReceiveGSR(call.arguments);
+        case 'didReceiveBVP':
+          return _didReceiveBVP(call.arguments);
+        case 'didReceiveIBI':
+          return _didReceiveIBI(call.arguments);
+        case 'didReceiveTemperature':
+          return _didReceiveTemperature(call.arguments);
         default:
           return false;
       }
@@ -54,5 +62,25 @@ class EmpaticaManager {
       discoveredDevices.sink.add(devices);
       connectDevice(b.id);
     }
+  }
+
+  _didReceiveGSR(dynamic arguments) {
+    print('didReceiveGSR');
+    print(arguments);
+  }
+
+  _didReceiveBVP(dynamic arguments) {
+    print('didReceiveBVP');
+    print(arguments);
+  }
+
+  _didReceiveIBI(dynamic arguments) {
+    print('didReceiveIBI');
+    print(arguments);
+  }
+
+  _didReceiveTemperature(dynamic arguments) {
+    print('didReceiveTemperature');
+    print(arguments);
   }
 }

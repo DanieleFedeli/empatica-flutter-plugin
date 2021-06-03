@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.empatica.empalink.ConnectionNotAllowedException;
@@ -15,21 +14,23 @@ import com.empatica.empalink.config.EmpaStatus;
 import com.empatica.empalink.delegate.EmpaDataDelegate;
 import com.empatica.empalink.delegate.EmpaStatusDelegate;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import io.flutter.Log;
-import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelegate, EmpaStatusDelegate {
     final MethodChannel channel;
     final private EmpaDeviceManager _manager;
     final private Handler handler = new Handler(Looper.getMainLooper());
-
     final private String TAG = "EmpaticaPortingPlugin";
+    // Throttling
+    double tsGSR = 0.0;
+    double tsBVP = 0.0;
+    double tsIBI = 0.0;
+    double tsTemperature = 0.0;
+
     Map<String, EmpaticaDevice> discoveredDevices = new HashMap<>();
 
     public EmpaticaManager(MethodChannel channel, Context context) {
@@ -66,22 +67,47 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didReceiveGSR(float gsr, double timestamp) {
+        if (tsGSR + 1 <= timestamp) {
+            final Map<String, Object> payload = new HashMap<>();
+            payload.put("gsr", gsr);
+            payload.put("timestamp", timestamp);
+            tsGSR = timestamp;
+            this.runOnUiThread(() -> channel.invokeMethod("didReceiveGSR", payload));
+        }
 
     }
 
     @Override
     public void didReceiveBVP(float bvp, double timestamp) {
-
+        if (tsBVP + 1 <= timestamp) {
+            final Map<String, Object> payload = new HashMap<>();
+            payload.put("bvp", bvp);
+            payload.put("timestamp", timestamp);
+            tsBVP = timestamp;
+            this.runOnUiThread(() -> channel.invokeMethod("didReceiveBVP", payload));
+        }
     }
 
     @Override
     public void didReceiveIBI(float ibi, double timestamp) {
-
+        if (tsIBI + 1 <= timestamp) {
+            final Map<String, Object> payload = new HashMap<>();
+            payload.put("ibi", ibi);
+            payload.put("timestamp", ibi);
+            tsIBI = timestamp;
+            this.runOnUiThread(() -> channel.invokeMethod("didReceiveIBI", payload));
+        }
     }
 
     @Override
     public void didReceiveTemperature(float t, double timestamp) {
-
+        if (tsTemperature + 1 <= timestamp) {
+            final Map<String, Object> payload = new HashMap<>();
+            payload.put("t", t);
+            payload.put("timestamp", t);
+            tsTemperature = timestamp;
+            this.runOnUiThread(() -> channel.invokeMethod("didReceiveTemperature", payload));
+        }
     }
 
     @Override
@@ -114,7 +140,8 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didUpdateSensorStatus(int status, EmpaSensorType type) {
-
+        Log.d(TAG, "Status: " + status);
+        Log.d(TAG, "SensorType: " + type.toString());
     }
 
     @Override
