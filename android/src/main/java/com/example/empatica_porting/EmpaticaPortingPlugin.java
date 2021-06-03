@@ -47,13 +47,13 @@ public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler {
                 Log.d(TAG, "Authentication...");
                 final String apiKey = call.argument("apiKey");
                 _manager.authenticateWithAPIKey(apiKey);
-                Log.d(TAG, "Authenticated!");
                 result.success(null);
                 break;
             }
             case "startScanning": {
                 Log.d(TAG, "Start scanning");
                 _manager.startScanning();
+                result.success(null);
                 break;
             }
             case "stopScanning": {
@@ -64,9 +64,9 @@ public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler {
             }
             case "connectDevice": {
                 Log.d(TAG, "Connect to device");
-                EmpaticaDevice device = call.argument("device");
+                String serial = call.argument("serialNumber");
                 try {
-                    _manager.connectDevice(device);
+                    _manager.connectDevice(serial);
                     result.success(null);
                 } catch ( ConnectionNotAllowedException e) {
                     result.error("ConnectionNotAllowedException", e.getMessage(), e.getStackTrace());
@@ -79,7 +79,6 @@ public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler {
                 result.notImplemented();
             }
         }
-
     }
 
 }

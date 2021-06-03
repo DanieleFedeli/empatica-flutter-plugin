@@ -1,6 +1,11 @@
 package com.example.empatica_porting;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.empatica.empalink.ConnectionNotAllowedException;
 import com.empatica.empalink.EmpaDeviceManager;
@@ -10,17 +15,22 @@ import com.empatica.empalink.config.EmpaStatus;
 import com.empatica.empalink.delegate.EmpaDataDelegate;
 import com.empatica.empalink.delegate.EmpaStatusDelegate;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import io.flutter.Log;
+import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class EmpaticaManager implements EmpaDataDelegate, EmpaStatusDelegate {
+public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelegate, EmpaStatusDelegate {
     final MethodChannel channel;
     final private EmpaDeviceManager _manager;
+    final private Handler handler = new Handler(Looper.getMainLooper());
+
     final private String TAG = "EmpaticaPortingPlugin";
-    Map<String, EmpaticaDevice> discoveredDevice = new HashMap<>();
+    Map<String, EmpaticaDevice> discoveredDevices = new HashMap<>();
 
     public EmpaticaManager(MethodChannel channel, Context context) {
         this.channel = channel;
@@ -36,15 +46,22 @@ public class EmpaticaManager implements EmpaDataDelegate, EmpaStatusDelegate {
     public void startScanning() {
         this._manager.prepareScanning();
         this._manager.startScanning();
+        this.discoveredDevices = new HashMap<>();
     }
 
     public void stopScanning() {
         this._manager.stopScanning();
-        this.discoveredDevice = new HashMap<>();
+        this.discoveredDevices = new HashMap<>();
     }
 
-    public void connectDevice(EmpaticaDevice device) throws ConnectionNotAllowedException {
-        this._manager.connectDevice(device);
+    public void connectDevice(String serialNumber) throws ConnectionNotAllowedException {
+        this._manager.stopScanning();
+        final EmpaticaDevice device = discoveredDevices.get(serialNumber);
+
+        if (device != null) {
+
+            this._manager.connectDevice(device);
+        }
     }
 
     @Override
@@ -85,7 +102,9 @@ public class EmpaticaManager implements EmpaDataDelegate, EmpaStatusDelegate {
     @Override
     public void didUpdateStatus(EmpaStatus status) {
         Log.d(TAG, "Status: " + status.name());
-        channel.invokeMethod("didUpdateStatus", status.name());
+
+        this.runOnUiThread(() ->
+                channel.invokeMethod("didUpdateStatus", status.name()));
     }
 
     @Override
@@ -101,7 +120,9 @@ public class EmpaticaManager implements EmpaDataDelegate, EmpaStatusDelegate {
     @Override
     public void didDiscoverDevice(EmpaticaDevice device, String deviceLabel, int rssi, boolean allowed) {
         Log.d(TAG, "Discovered device: " + deviceLabel);
-        discoveredDevice.put(deviceLabel, device);
+        if (!allowed) return;
+        final String[] serialNumber = deviceLabel.split(" - ");
+        discoveredDevices.put(serialNumber[1], device);
         channel.invokeMethod("didDiscoverDevice", deviceLabel);
     }
 
@@ -124,4 +145,6 @@ public class EmpaticaManager implements EmpaDataDelegate, EmpaStatusDelegate {
     public void didUpdateOnWristStatus(int status) {
 
     }
+
+
 }

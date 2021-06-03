@@ -25,8 +25,8 @@ class EmpaticaManager {
   void startScanning() => _channel.invokeMethod('startScanning');
   void stopScanning() => _channel.invokeMethod('stopScaning');
 
-  void connectDevice(BluetoothDevice device) =>
-      _channel.invokeMethod('connectDevice', {'device': device});
+  void connectDevice(String serialNumber) =>
+      _channel.invokeMethod('connectDevice', {'serialNumber': serialNumber});
 
   void _setupCallbacks() {
     _channel.setMethodCallHandler((call) async {
@@ -52,6 +52,7 @@ class EmpaticaManager {
     if (!devices.contains(b)) {
       devices.add(b);
       discoveredDevices.sink.add(devices);
+      connectDevice(b.id);
     }
   }
 }

@@ -6,6 +6,6 @@ class BluetoothDevice {
 
   factory BluetoothDevice.fromBuffer(String label) {
     final List<String> labelSplitted = label.split(' - ');
-    return BluetoothDevice(id: labelSplitted[0], name: labelSplitted[1]);
+    return BluetoothDevice(id: labelSplitted[1], name: labelSplitted[0]);
   }
 }
