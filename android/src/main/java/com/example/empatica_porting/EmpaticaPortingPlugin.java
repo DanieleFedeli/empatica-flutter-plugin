@@ -1,16 +1,10 @@
 package com.example.empatica_porting;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.empatica.empalink.ConnectionNotAllowedException;
-import com.empatica.empalink.EmpaDeviceManager;
 import com.empatica.empalink.EmpaticaDevice;
-import com.empatica.empalink.config.EmpaSensorType;
-import com.empatica.empalink.config.EmpaStatus;
-import com.empatica.empalink.delegate.EmpaDataDelegate;
-import com.empatica.empalink.delegate.EmpaStatusDelegate;
 
 import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -22,18 +16,22 @@ import io.flutter.plugin.common.MethodChannel.Result;
 /**
  * EmpaticaPortingPlugin
  */
-public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler, EmpaStatusDelegate, EmpaDataDelegate {
+public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler {
     final private String TAG = "EmpaticaPortingPlugin";
     private MethodChannel channel;
     private Context context;
-    private EmpaDeviceManager _manager;
+    private EmpaticaManager _manager;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "empatica_porting");
         channel.setMethodCallHandler(this);
         context = flutterPluginBinding.getApplicationContext();
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull @org.jetbrains.annotations.NotNull FlutterPlugin.FlutterPluginBinding binding) {
+
     }
 
     @Override
@@ -41,7 +39,7 @@ public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler, 
         switch (call.method) {
             case "createDeviceManager": {
                 Log.d(TAG, "createDeviceManager...");
-                _manager = new EmpaDeviceManager(context, this, this);
+                _manager = new EmpaticaManager(channel, context);
                 result.success(null);
                 break;
             }
@@ -49,13 +47,13 @@ public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler, 
                 Log.d(TAG, "Authentication...");
                 final String apiKey = call.argument("apiKey");
                 _manager.authenticateWithAPIKey(apiKey);
+                Log.d(TAG, "Authenticated!");
                 result.success(null);
                 break;
             }
             case "startScanning": {
                 Log.d(TAG, "Start scanning");
                 _manager.startScanning();
-                result.success(null);
                 break;
             }
             case "stopScanning": {
@@ -70,7 +68,7 @@ public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler, 
                 try {
                     _manager.connectDevice(device);
                     result.success(null);
-                } catch (ConnectionNotAllowedException e) {
+                } catch ( ConnectionNotAllowedException e) {
                     result.error("ConnectionNotAllowedException", e.getMessage(), e.getStackTrace());
                 }
 
@@ -84,87 +82,5 @@ public class EmpaticaPortingPlugin implements FlutterPlugin, MethodCallHandler, 
 
     }
 
-    @Override
-    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        channel.setMethodCallHandler(null);
-    }
-
-
-    @Override
-    public void didReceiveGSR(float gsr, double timestamp) {
-
-    }
-
-    @Override
-    public void didReceiveBVP(float bvp, double timestamp) {
-
-    }
-
-    @Override
-    public void didReceiveIBI(float ibi, double timestamp) {
-
-    }
-
-    @Override
-    public void didReceiveTemperature(float t, double timestamp) {
-
-    }
-
-    @Override
-    public void didReceiveAcceleration(int x, int y, int z, double timestamp) {
-
-    }
-
-    @Override
-    public void didReceiveBatteryLevel(float level, double timestamp) {
-
-    }
-
-    @Override
-    public void didReceiveTag(double timestamp) {
-
-    }
-
-    @Override
-    public void didUpdateStatus(EmpaStatus status) {
-        Log.d(TAG, "Status: " + status.name());
-        channel.invokeMethod("didUpdateStatus", status.name());
-    }
-
-    @Override
-    public void didEstablishConnection() {
-
-    }
-
-    @Override
-    public void didUpdateSensorStatus(int status, EmpaSensorType type) {
-
-    }
-
-    @Override
-    public void didDiscoverDevice(EmpaticaDevice device, String deviceLabel, int rssi, boolean allowed) {
-        Log.d(TAG, "Discovered device: " + deviceLabel);
-        channel.invokeMethod("didDiscoverDevice", device);
-    }
-
-    @Override
-    public void didFailedScanning(int errorCode) {
-
-    }
-
-    @Override
-    public void didRequestEnableBluetooth() {
-
-    }
-
-    @Override
-    public void bluetoothStateChanged() {
-
-    }
-
-    @Override
-    public void didUpdateOnWristStatus(int status) {
-
-    }
 }
 
