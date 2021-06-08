@@ -144,12 +144,13 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didUpdateStatus(EmpaStatus status) {
-        Log.d(TAG, "Status: " + status.name());
+        final EmpaStatus _status = status;
+        Log.d(TAG, "Status: " + _status.name());
 
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                channel.invokeMethod("didUpdateStatus", status.name());
+                channel.invokeMethod("didUpdateStatus", _status.name());
             }
         });
     }
