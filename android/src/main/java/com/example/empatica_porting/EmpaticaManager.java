@@ -1,8 +1,6 @@
 package com.example.empatica_porting;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,7 +21,6 @@ import io.flutter.plugin.common.MethodChannel;
 public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelegate, EmpaStatusDelegate {
     final MethodChannel channel;
     final private EmpaDeviceManager _manager;
-    final private Handler handler = new Handler(Looper.getMainLooper());
     final private String TAG = "EmpaticaPortingPlugin";
     // Throttling
     double tsGSR = 0.0;
@@ -72,7 +69,12 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
             payload.put("gsr", gsr);
             payload.put("timestamp", timestamp);
             tsGSR = timestamp;
-            this.runOnUiThread(() -> channel.invokeMethod("didReceiveGSR", payload));
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    channel.invokeMethod("didReceiveGSR", payload);
+                }
+            });
         }
 
     }
@@ -84,7 +86,12 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
             payload.put("bvp", bvp);
             payload.put("timestamp", timestamp);
             tsBVP = timestamp;
-            this.runOnUiThread(() -> channel.invokeMethod("didReceiveBVP", payload));
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    channel.invokeMethod("didReceiveBVP", payload);
+                }
+            });
         }
     }
 
@@ -95,7 +102,12 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
             payload.put("ibi", ibi);
             payload.put("timestamp", ibi);
             tsIBI = timestamp;
-            this.runOnUiThread(() -> channel.invokeMethod("didReceiveIBI", payload));
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    channel.invokeMethod("didReceiveIBI", payload);
+                }
+            });
         }
     }
 
@@ -106,7 +118,12 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
             payload.put("t", t);
             payload.put("timestamp", t);
             tsTemperature = timestamp;
-            this.runOnUiThread(() -> channel.invokeMethod("didReceiveTemperature", payload));
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    channel.invokeMethod("didReceiveTemperature", payload);
+                }
+            });
         }
     }
 
@@ -129,8 +146,12 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     public void didUpdateStatus(EmpaStatus status) {
         Log.d(TAG, "Status: " + status.name());
 
-        this.runOnUiThread(() ->
-                channel.invokeMethod("didUpdateStatus", status.name()));
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                channel.invokeMethod("didUpdateStatus", status.name());
+            }
+        });
     }
 
     @Override
