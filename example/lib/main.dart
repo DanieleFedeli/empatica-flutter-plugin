@@ -29,7 +29,7 @@ class _MyAppState extends State<MyApp> {
       Permission.bluetooth,
     ].request();
 
-    manager = new EmpaticaManager();
+    manager = await EmpaticaManager.init();
     manager.authenticateWithAPIKey('16442ff6063540589d50faccd62791c0');
     manager.status.listen((value) {
       if (value == 'READY') manager.startScanning();

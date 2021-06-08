@@ -7,10 +7,14 @@ class EmpaticaManager {
   late BehaviorSubject<List<BluetoothDevice>> discoveredDevices;
   static const MethodChannel _channel = const MethodChannel('empatica_porting');
 
-  EmpaticaManager() {
+  static Future<EmpaticaManager> init() async {
+    await _channel.invokeMethod("createDeviceManager");
+    return new EmpaticaManager._();
+  }
+
+  EmpaticaManager._() {
     status = BehaviorSubject<String>();
     discoveredDevices = BehaviorSubject.seeded([]);
-    _channel.invokeMethod("createDeviceManager");
     _setupCallbacks();
   }
 
@@ -19,14 +23,17 @@ class EmpaticaManager {
     discoveredDevices.close();
   }
 
-  void authenticateWithAPIKey(String apiKey) =>
+  Future<void> authenticateWithAPIKey(String apiKey) async =>
       _channel.invokeMethod('authenticateWithAPIKey', {'apiKey': apiKey});
 
-  void startScanning() => _channel.invokeMethod('startScanning');
-  void stopScanning() => _channel.invokeMethod('stopScaning');
+  Future<void> startScanning() async =>
+      await _channel.invokeMethod('startScanning');
 
-  void connectDevice(String serialNumber) =>
-      _channel.invokeMethod('connectDevice', {'serialNumber': serialNumber});
+  Future<void> stopScanning() async =>
+      await _channel.invokeMethod('stopScaning');
+
+  Future<void> connectDevice(String serialNumber) async => await _channel
+      .invokeMethod('connectDevice', {'serialNumber': serialNumber});
 
   void _setupCallbacks() {
     _channel.setMethodCallHandler((call) async {
