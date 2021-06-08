@@ -3,12 +3,12 @@ import 'package:rxdart/rxdart.dart';
 import 'bluetooth_device.dart';
 
 class EmpaticaManager {
+  static const MethodChannel _channel = const MethodChannel('empatica_porting');
+
   late BehaviorSubject<String> status;
   late BehaviorSubject<List<BluetoothDevice>> discoveredDevices;
-  late final MethodChannel _channel;
 
   EmpaticaManager() {
-    _channel = MethodChannel('empatica_porting');
     _channel.invokeMethod("createDeviceManager");
     status = BehaviorSubject<String>();
     discoveredDevices = BehaviorSubject.seeded([]);
