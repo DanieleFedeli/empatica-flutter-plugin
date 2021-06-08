@@ -5,14 +5,11 @@ import 'bluetooth_device.dart';
 class EmpaticaManager {
   late BehaviorSubject<String> status;
   late BehaviorSubject<List<BluetoothDevice>> discoveredDevices;
-  static const MethodChannel _channel = const MethodChannel('empatica_porting');
+  late final MethodChannel _channel;
 
-  static Future<EmpaticaManager> init() async {
-    await _channel.invokeMethod("createDeviceManager");
-    return new EmpaticaManager._();
-  }
-
-  EmpaticaManager._() {
+  EmpaticaManager() {
+    _channel = MethodChannel('empatica_porting');
+    _channel.invokeMethod("createDeviceManager");
     status = BehaviorSubject<String>();
     discoveredDevices = BehaviorSubject.seeded([]);
     _setupCallbacks();
