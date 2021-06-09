@@ -26,6 +26,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     double tsGSR = 0.0;
     double tsBVP = 0.0;
     double tsIBI = 0.0;
+
     double tsTemperature = 0.0;
 
     Map<String, EmpaticaDevice> discoveredDevices = new HashMap<>();
@@ -167,8 +168,6 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didDiscoverDevice(EmpaticaDevice device, String deviceLabel, int rssi, boolean allowed) {
-        Log.d(TAG, "Discovered device: " + deviceLabel);
-
         if (!allowed)
             return;
 

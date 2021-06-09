@@ -34,7 +34,6 @@ class EmpaticaManager {
 
   void _setupCallbacks() {
     _channel.setMethodCallHandler((MethodCall call) async {
-      print(call.method);
       switch (call.method) {
         case 'didUpdateStatus':
           return _didUpdateStatus(call.arguments);
@@ -60,8 +59,9 @@ class EmpaticaManager {
   }
 
   _didDiscoverDevice(dynamic arguments) {
-    final BluetoothDevice b = BluetoothDevice.fromBuffer(arguments);
-    print(b);
+    final BluetoothDevice b =
+        BluetoothDevice.fromBuffer(Map<String, dynamic>.from(arguments));
+
     List<BluetoothDevice> devices = discoveredDevices.value;
     if (!devices.contains(b)) {
       devices.add(b);

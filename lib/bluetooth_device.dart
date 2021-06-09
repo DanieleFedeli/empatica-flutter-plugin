@@ -28,4 +28,12 @@ class BluetoothDevice {
   String toString() {
     return "advertisingName: $advertisingName, serialNumber: $serialNumber, hardwareId: $hardwareId, mAddress: $mAddress, deviceLabel: $deviceLabel, firmwareVersion: $firmwareVersion";
   }
+
+  bool operator ==(o) =>
+      o is BluetoothDevice &&
+      o.serialNumber == serialNumber &&
+      o.mAddress == mAddress;
+
+  @override
+  int get hashCode => mAddress.hashCode;
 }
