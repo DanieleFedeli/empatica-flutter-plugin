@@ -64,7 +64,7 @@ class EmpaticaManager {
     if (!devices.contains(b)) {
       devices.add(b);
       discoveredDevices.sink.add(devices);
-      connectDevice(b.id);
+      // connectDevice(b.id);
     }
   }
 
