@@ -99,7 +99,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
         final Map<String, Object> payload = new HashMap<>();
         payload.put("value", ibi);
         payload.put("timestamp", timestamp);
-        tsIBI = timestamp;
+
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
