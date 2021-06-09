@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'bluetooth_device.dart';
+import 'data_value.dart';
 
 class EmpaticaManager {
   static const MethodChannel _channel = const MethodChannel('empatica_porting');
@@ -8,15 +9,28 @@ class EmpaticaManager {
   late BehaviorSubject<String> status;
   late BehaviorSubject<List<BluetoothDevice>> discoveredDevices;
 
+  late BehaviorSubject<DataValue> gsr;
+  late BehaviorSubject<DataValue> ibi;
+  late BehaviorSubject<DataValue> bvp;
+  late BehaviorSubject<DataValue> temp;
+
   EmpaticaManager() {
     _channel.invokeMethod("createDeviceManager");
     status = BehaviorSubject<String>();
     discoveredDevices = BehaviorSubject.seeded([]);
+    gsr = BehaviorSubject();
+    ibi = BehaviorSubject();
+    bvp = BehaviorSubject();
+    temp = BehaviorSubject();
     _setupCallbacks();
   }
 
   destroy() {
     status.close();
+    gsr.close();
+    ibi.close();
+    bvp.close();
+    temp.close();
     discoveredDevices.close();
   }
 
@@ -71,21 +85,29 @@ class EmpaticaManager {
 
   _didReceiveGSR(dynamic arguments) {
     print('didReceiveGSR');
-    print(arguments);
+    final DataValue dv =
+        DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
+    gsr.sink.add(dv);
   }
 
   _didReceiveBVP(dynamic arguments) {
     print('didReceiveBVP');
-    print(arguments);
+    final DataValue dv =
+        DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
+    bvp.sink.add(dv);
   }
 
   _didReceiveIBI(dynamic arguments) {
     print('didReceiveIBI');
-    print(arguments);
+    final DataValue dv =
+        DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
+    ibi.sink.add(dv);
   }
 
   _didReceiveTemperature(dynamic arguments) {
     print('didReceiveTemperature');
-    print(arguments);
+    final DataValue dv =
+        DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
+    temp.sink.add(dv);
   }
 }

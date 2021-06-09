@@ -66,7 +66,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     public void didReceiveGSR(float gsr, double timestamp) {
         if (tsGSR + 1 <= timestamp) {
             final Map<String, Object> payload = new HashMap<>();
-            payload.put("gsr", gsr);
+            payload.put("value", gsr);
             payload.put("timestamp", timestamp);
             tsGSR = timestamp;
             this.runOnUiThread(new Runnable() {
@@ -83,7 +83,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     public void didReceiveBVP(float bvp, double timestamp) {
         if (tsBVP + 1 <= timestamp) {
             final Map<String, Object> payload = new HashMap<>();
-            payload.put("bvp", bvp);
+            payload.put("value", bvp);
             payload.put("timestamp", timestamp);
             tsBVP = timestamp;
             this.runOnUiThread(new Runnable() {
@@ -99,7 +99,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     public void didReceiveIBI(float ibi, double timestamp) {
         if (tsIBI + 1 <= timestamp) {
             final Map<String, Object> payload = new HashMap<>();
-            payload.put("ibi", ibi);
+            payload.put("value", ibi);
             payload.put("timestamp", ibi);
             tsIBI = timestamp;
             this.runOnUiThread(new Runnable() {
@@ -115,7 +115,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     public void didReceiveTemperature(float t, double timestamp) {
         if (tsTemperature + 1 <= timestamp) {
             final Map<String, Object> payload = new HashMap<>();
-            payload.put("t", t);
+            payload.put("value", t);
             payload.put("timestamp", t);
             tsTemperature = timestamp;
             this.runOnUiThread(new Runnable() {
