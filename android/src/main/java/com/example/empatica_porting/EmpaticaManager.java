@@ -25,8 +25,6 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     // Throttling
     double tsGSR = 0.0;
     double tsBVP = 0.0;
-    double tsIBI = 0.0;
-
     double tsTemperature = 0.0;
 
     Map<String, EmpaticaDevice> discoveredDevices = new HashMap<>();
@@ -97,18 +95,18 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didReceiveIBI(float ibi, double timestamp) {
-        if (tsIBI + 1 <= timestamp) {
-            final Map<String, Object> payload = new HashMap<>();
-            payload.put("value", ibi);
-            payload.put("timestamp", timestamp);
-            tsIBI = timestamp;
-            this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    channel.invokeMethod("didReceiveIBI", payload);
-                }
-            });
-        }
+
+        final Map<String, Object> payload = new HashMap<>();
+        payload.put("value", ibi);
+        payload.put("timestamp", timestamp);
+        tsIBI = timestamp;
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                channel.invokeMethod("didReceiveIBI", payload);
+            }
+        });
+
     }
 
     @Override
