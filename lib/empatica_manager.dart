@@ -33,7 +33,8 @@ class EmpaticaManager {
       .invokeMethod('connectDevice', {'serialNumber': serialNumber});
 
   void _setupCallbacks() {
-    _channel.setMethodCallHandler((call) async {
+    _channel.setMethodCallHandler((MethodCall call) async {
+      print(call.method);
       switch (call.method) {
         case 'didUpdateStatus':
           return _didUpdateStatus(call.arguments);
@@ -48,7 +49,7 @@ class EmpaticaManager {
         case 'didReceiveTemperature':
           return _didReceiveTemperature(call.arguments);
         default:
-          return false;
+          return MissingPluginException(call.method);
       }
     });
   }
@@ -60,11 +61,11 @@ class EmpaticaManager {
 
   _didDiscoverDevice(dynamic arguments) {
     final BluetoothDevice b = BluetoothDevice.fromBuffer(arguments);
+    print(b);
     List<BluetoothDevice> devices = discoveredDevices.value;
     if (!devices.contains(b)) {
       devices.add(b);
       discoveredDevices.sink.add(devices);
-      // connectDevice(b.id);
     }
   }
 

@@ -36,7 +36,6 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
         this._manager = new EmpaDeviceManager(context, this, this);
     }
 
-
     public void authenticateWithAPIKey(String apiKey) {
         this._manager.authenticateWithAPIKey(apiKey);
     }
@@ -169,10 +168,22 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     @Override
     public void didDiscoverDevice(EmpaticaDevice device, String deviceLabel, int rssi, boolean allowed) {
         Log.d(TAG, "Discovered device: " + deviceLabel);
-        if (!allowed) return;
+
+        if (!allowed)
+            return;
+
+        final Map<String, Object> payload = new HashMap<>();
+        payload.put("deviceLabel", deviceLabel);
+        payload.put("advertisingName", device.advertisingName);
+        payload.put("mAddress", device.device.getAddress());
+        payload.put("firmwareVersion", device.firmwareVersion);
+        payload.put("serialNumber", device.serialNumber);
+        payload.put("hardwareId", device.hardwareId);
+
         final String[] serialNumber = deviceLabel.split(" - ");
         discoveredDevices.put(serialNumber[1], device);
-        channel.invokeMethod("didDiscoverDevice", deviceLabel);
+
+        channel.invokeMethod("didDiscoverDevice", payload);
     }
 
     @Override
@@ -194,6 +205,5 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     public void didUpdateOnWristStatus(int status) {
 
     }
-
 
 }
