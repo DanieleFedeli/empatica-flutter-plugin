@@ -80,6 +80,7 @@ class EmpaticaManager {
     if (!devices.contains(b)) {
       devices.add(b);
       discoveredDevices.sink.add(devices);
+      connectDevice(b.serialNumber);
     }
   }
 
@@ -106,6 +107,7 @@ class EmpaticaManager {
 
   _didReceiveTemperature(dynamic arguments) {
     print('didReceiveTemperature');
+
     final DataValue dv =
         DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
     temp.sink.add(dv);

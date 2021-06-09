@@ -100,7 +100,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
         if (tsIBI + 1 <= timestamp) {
             final Map<String, Object> payload = new HashMap<>();
             payload.put("value", ibi);
-            payload.put("timestamp", ibi);
+            payload.put("timestamp", timestamp);
             tsIBI = timestamp;
             this.runOnUiThread(new Runnable() {
                 @Override
@@ -116,7 +116,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
         if (tsTemperature + 1 <= timestamp) {
             final Map<String, Object> payload = new HashMap<>();
             payload.put("value", t);
-            payload.put("timestamp", t);
+            payload.put("timestamp", timestamp);
             tsTemperature = timestamp;
             this.runOnUiThread(new Runnable() {
                 @Override
