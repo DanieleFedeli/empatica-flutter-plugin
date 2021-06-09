@@ -27,7 +27,7 @@ class EmpaticaManager {
       await _channel.invokeMethod('startScanning');
 
   Future<void> stopScanning() async =>
-      await _channel.invokeMethod('stopScaning');
+      await _channel.invokeMethod('stopScanning');
 
   Future<void> connectDevice(String serialNumber) async => await _channel
       .invokeMethod('connectDevice', {'serialNumber': serialNumber});
