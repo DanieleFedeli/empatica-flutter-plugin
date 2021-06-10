@@ -8,7 +8,7 @@ class DataValue {
     return DataValue(timestamp: data['timestamp'], value: data['value']);
   }
 
-  toList() {
+  List<double> toList() {
     return [timestamp, value];
   }
 }
