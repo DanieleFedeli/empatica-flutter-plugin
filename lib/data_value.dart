@@ -7,4 +7,8 @@ class DataValue {
   factory DataValue.fromBuffer(Map<String, dynamic> data) {
     return DataValue(timestamp: data['timestamp'], value: data['value']);
   }
+
+  toList() {
+    return [timestamp, value];
+  }
 }
