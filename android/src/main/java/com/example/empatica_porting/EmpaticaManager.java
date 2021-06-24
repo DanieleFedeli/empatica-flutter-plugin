@@ -196,8 +196,9 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didUpdateOnWristStatus(int status) {
-        // Log.d(TAG, "didUpdateOnWristStatus: " + status);
-        // channel.invokeMethod("didUpdateOnWristStatus", status);
+        Log.d(TAG, "Status: " + status);
+
+        channel.invokeMethod("didUpdateSensorStatus", status);
     }
 
 }
