@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'bluetooth_device.dart';
@@ -15,7 +13,7 @@ class EmpaticaManager {
   late BehaviorSubject<DataValue> ibi;
   late BehaviorSubject<DataValue> bvp;
   late BehaviorSubject<DataValue> temp;
-  late BehaviorSubject<Float> battery;
+  late BehaviorSubject<double> battery;
   late BehaviorSubject<int> wristStatus;
 
   EmpaticaManager() {
@@ -92,7 +90,7 @@ class EmpaticaManager {
   // }
 
   _didReceiveBatteryLevel(dynamic arguments) {
-    final batteryLevel = arguments as Float;
+    final batteryLevel = arguments as double;
     battery.sink.add(batteryLevel);
   }
 
