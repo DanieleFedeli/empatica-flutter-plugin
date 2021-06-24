@@ -71,8 +71,6 @@ class EmpaticaManager {
           return _didReceiveBatteryLevel(call.arguments);
         case 'didUpdateSensorStatus':
           return _didUpdateSensorStatus(call.arguments);
-        // case 'didUpdateOnWristStatus':
-        //   return _didUpdateOnWristStatus(call.arguments);
         default:
           return MissingPluginException(call.method);
       }
@@ -83,11 +81,6 @@ class EmpaticaManager {
     final s = arguments as int;
     wristStatus.sink.add(s);
   }
-
-  // _didUpdateOnWristStatus(dynamic arguments) {
-  //   final s = arguments as int;
-  //   wristStatus.sink.add(s);
-  // }
 
   _didReceiveBatteryLevel(dynamic arguments) {
     final batteryLevel = arguments as double;

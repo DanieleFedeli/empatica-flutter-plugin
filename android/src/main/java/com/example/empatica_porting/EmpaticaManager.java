@@ -128,6 +128,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didReceiveBatteryLevel(float level, double timestamp) {
+        Log.d(TAG, "Battery level" + level);
         channel.invokeMethod("didReceiveBatteryLevel", level);
     }
 
