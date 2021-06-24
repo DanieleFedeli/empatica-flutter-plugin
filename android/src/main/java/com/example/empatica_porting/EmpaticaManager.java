@@ -11,6 +11,7 @@ import com.empatica.empalink.config.EmpaSensorType;
 import com.empatica.empalink.config.EmpaStatus;
 import com.empatica.empalink.delegate.EmpaDataDelegate;
 import com.empatica.empalink.delegate.EmpaStatusDelegate;
+import com.empatica.empalink.config.EmpaSensorStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -154,9 +155,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     }
 
     @Override
-    public void didUpdateSensorStatus(int status, EmpaSensorType type) {
-        Log.d(TAG, "Status: " + status);
-
+    public void didUpdateSensorStatus(@EmpaSensorStatus int status, EmpaSensorType type) {
         channel.invokeMethod("didUpdateSensorStatus", status);
     }
 
@@ -195,9 +194,7 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
     }
 
     @Override
-    public void didUpdateOnWristStatus(int status) {
-        Log.d(TAG, "Status: " + status);
-
+    public void didUpdateOnWristStatus(@EmpaSensorStatus int status) {
         channel.invokeMethod("didUpdateSensorStatus", status);
     }
 
