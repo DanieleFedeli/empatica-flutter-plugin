@@ -114,29 +114,24 @@ class EmpaticaManager {
   }
 
   _didReceiveGSR(dynamic arguments) {
-    print('didReceiveGSR');
     final DataValue dv =
         DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
     gsr.sink.add(dv);
   }
 
   _didReceiveBVP(dynamic arguments) {
-    print('didReceiveBVP');
     final DataValue dv =
         DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
     bvp.sink.add(dv);
   }
 
   _didReceiveIBI(dynamic arguments) {
-    print('didReceiveIBI');
     final DataValue dv =
         DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
     ibi.sink.add(dv);
   }
 
   _didReceiveTemperature(dynamic arguments) {
-    print('didReceiveTemperature');
-
     final DataValue dv =
         DataValue.fromBuffer(Map<String, dynamic>.from(arguments));
     temp.sink.add(dv);
