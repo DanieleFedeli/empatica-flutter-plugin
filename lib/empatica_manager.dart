@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'bluetooth_device.dart';
@@ -13,6 +15,8 @@ class EmpaticaManager {
   late BehaviorSubject<DataValue> ibi;
   late BehaviorSubject<DataValue> bvp;
   late BehaviorSubject<DataValue> temp;
+  late BehaviorSubject<Float> battery;
+  late BehaviorSubject<int> wristStatus;
 
   EmpaticaManager() {
     _channel.invokeMethod("createDeviceManager");
@@ -22,6 +26,8 @@ class EmpaticaManager {
     ibi = BehaviorSubject();
     bvp = BehaviorSubject();
     temp = BehaviorSubject();
+    battery = BehaviorSubject();
+    wristStatus = BehaviorSubject();
     _setupCallbacks();
   }
 
@@ -31,6 +37,8 @@ class EmpaticaManager {
     ibi.close();
     bvp.close();
     temp.close();
+    battery.close();
+    wristStatus.close();
     discoveredDevices.close();
   }
 
@@ -61,10 +69,24 @@ class EmpaticaManager {
           return _didReceiveIBI(call.arguments);
         case 'didReceiveTemperature':
           return _didReceiveTemperature(call.arguments);
+        case 'didReceiveBatteryLevel':
+          return _didReceiveBatteryLevel(call.arguments);
+        case 'didUpdateOnWristStatus':
+          return _didUpdateOnWristStatus(call.arguments);
         default:
           return MissingPluginException(call.method);
       }
     });
+  }
+
+  _didUpdateOnWristStatus(dynamic arguments) {
+    final s = arguments as int;
+    wristStatus.sink.add(s);
+  }
+
+  _didReceiveBatteryLevel(dynamic arguments) {
+    final batteryLevel = arguments as Float;
+    battery.sink.add(batteryLevel);
   }
 
   _didUpdateStatus(dynamic arguments) {
