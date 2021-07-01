@@ -128,11 +128,12 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didReceiveBatteryLevel(float level, double timestamp) {
+        final float _level = level;
         Log.d(TAG, "Battery level" + level);
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                channel.invokeMethod("didReceiveBatteryLevel", level);
+                channel.invokeMethod("didReceiveBatteryLevel", _level);
             }
         });
     }
@@ -162,10 +163,11 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didUpdateSensorStatus(@EmpaSensorStatus int status, EmpaSensorType type) {
+        final int _status = status;
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                channel.invokeMethod("didUpdateSensorStatus", status);
+                channel.invokeMethod("didUpdateSensorStatus", _status);
             }
         });
     }
@@ -206,10 +208,11 @@ public class EmpaticaManager extends AppCompatActivity implements EmpaDataDelega
 
     @Override
     public void didUpdateOnWristStatus(@EmpaSensorStatus int status) {
+        final int _status = status;
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                channel.invokeMethod("didUpdateSensorStatus", status);
+                channel.invokeMethod("didUpdateSensorStatus", _status);
             }
         });
     }
