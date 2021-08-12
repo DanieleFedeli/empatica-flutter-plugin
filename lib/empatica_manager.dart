@@ -6,26 +6,26 @@ import 'data_value.dart';
 class EmpaticaManager {
   static const MethodChannel _channel = const MethodChannel('empatica_porting');
 
-  late PublishSubject<String> status;
-  late PublishSubject<List<BluetoothDevice>> discoveredDevices;
+  late BehaviorSubject<String> status;
+  late BehaviorSubject<List<BluetoothDevice>> discoveredDevices;
 
-  late PublishSubject<DataValue> gsr;
-  late PublishSubject<DataValue> ibi;
-  late PublishSubject<DataValue> bvp;
-  late PublishSubject<DataValue> temp;
-  late PublishSubject<double> battery;
-  late PublishSubject<int> wristStatus;
+  late BehaviorSubject<DataValue> gsr;
+  late BehaviorSubject<DataValue> ibi;
+  late BehaviorSubject<DataValue> bvp;
+  late BehaviorSubject<DataValue> temp;
+  late BehaviorSubject<double> battery;
+  late BehaviorSubject<int> wristStatus;
 
   EmpaticaManager() {
     _channel.invokeMethod("createDeviceManager");
-    status = PublishSubject<String>();
-    discoveredDevices = PublishSubject();
-    gsr = PublishSubject();
-    ibi = PublishSubject();
-    bvp = PublishSubject();
-    temp = PublishSubject();
-    battery = PublishSubject();
-    wristStatus = PublishSubject();
+    status = BehaviorSubject<String>();
+    discoveredDevices = BehaviorSubject();
+    gsr = BehaviorSubject();
+    ibi = BehaviorSubject();
+    bvp = BehaviorSubject();
+    temp = BehaviorSubject();
+    battery = BehaviorSubject();
+    wristStatus = BehaviorSubject();
     _setupCallbacks();
   }
 
