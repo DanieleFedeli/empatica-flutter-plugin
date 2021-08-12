@@ -19,7 +19,7 @@ class EmpaticaManager {
   EmpaticaManager() {
     _channel.invokeMethod("createDeviceManager");
     status = BehaviorSubject<String>();
-    discoveredDevices = BehaviorSubject();
+    discoveredDevices = BehaviorSubject.seeded([]);
     gsr = BehaviorSubject();
     ibi = BehaviorSubject();
     bvp = BehaviorSubject();
@@ -96,11 +96,7 @@ class EmpaticaManager {
     final BluetoothDevice b =
         BluetoothDevice.fromBuffer(Map<String, dynamic>.from(arguments));
 
-    List<BluetoothDevice> devices = [];
-
-    try {
-      devices.addAll(await discoveredDevices.last);
-    } catch (err) {}
+    List<BluetoothDevice> devices = discoveredDevices.value;
 
     if (!devices.contains(b)) {
       devices.add(b);
