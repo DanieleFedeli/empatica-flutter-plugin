@@ -6,26 +6,26 @@ import 'data_value.dart';
 class EmpaticaManager {
   static const MethodChannel _channel = const MethodChannel('empatica_porting');
 
-  late BehaviorSubject<String> status;
-  late BehaviorSubject<List<BluetoothDevice>> discoveredDevices;
+  late PublishSubject<String> status;
+  late PublishSubject<List<BluetoothDevice>> discoveredDevices;
 
-  late BehaviorSubject<DataValue> gsr;
-  late BehaviorSubject<DataValue> ibi;
-  late BehaviorSubject<DataValue> bvp;
-  late BehaviorSubject<DataValue> temp;
-  late BehaviorSubject<double> battery;
-  late BehaviorSubject<int> wristStatus;
+  late PublishSubject<DataValue> gsr;
+  late PublishSubject<DataValue> ibi;
+  late PublishSubject<DataValue> bvp;
+  late PublishSubject<DataValue> temp;
+  late PublishSubject<double> battery;
+  late PublishSubject<int> wristStatus;
 
   EmpaticaManager() {
     _channel.invokeMethod("createDeviceManager");
-    status = BehaviorSubject<String>();
-    discoveredDevices = BehaviorSubject.seeded([]);
-    gsr = BehaviorSubject();
-    ibi = BehaviorSubject();
-    bvp = BehaviorSubject();
-    temp = BehaviorSubject();
-    battery = BehaviorSubject();
-    wristStatus = BehaviorSubject();
+    status = PublishSubject<String>();
+    discoveredDevices = PublishSubject();
+    gsr = PublishSubject();
+    ibi = PublishSubject();
+    bvp = PublishSubject();
+    temp = PublishSubject();
+    battery = PublishSubject();
+    wristStatus = PublishSubject();
     _setupCallbacks();
   }
 
@@ -92,11 +92,16 @@ class EmpaticaManager {
     status.sink.add(s);
   }
 
-  _didDiscoverDevice(dynamic arguments) {
+  _didDiscoverDevice(dynamic arguments) async {
     final BluetoothDevice b =
         BluetoothDevice.fromBuffer(Map<String, dynamic>.from(arguments));
 
-    List<BluetoothDevice> devices = discoveredDevices.value;
+    List<BluetoothDevice> devices = [];
+
+    try {
+      devices.addAll(await discoveredDevices.last);
+    } catch (err) {}
+
     if (!devices.contains(b)) {
       devices.add(b);
       discoveredDevices.sink.add(devices);
